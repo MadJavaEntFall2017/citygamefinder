@@ -95,12 +95,8 @@
             var fields = $("input[name='list']").serializeArray();
             if (fields.length === 0)
             {
-                alert('nothing selected');
+                alert('Please select at least one sport.');
                 return false;
-            }
-            else
-            {
-                alert(fields.length + " items selected");
             }
         }
         $('#city_form').submit(onSubmit)
