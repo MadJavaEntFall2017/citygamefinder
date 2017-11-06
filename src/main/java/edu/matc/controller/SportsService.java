@@ -8,6 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
 
 @Path("/games")
 public class SportsService {
@@ -17,6 +18,9 @@ public class SportsService {
     public Response getMessage() throws Exception {
 
         String outputString = "You want the full schedule for all 4 sports";
+
+        SportCityList cityList = new SportCityList();
+        HashSet<String> cities = cityList.findSportCities();
 
         ObjectMapper mapper = new ObjectMapper();
         String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
