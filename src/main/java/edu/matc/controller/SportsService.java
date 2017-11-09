@@ -9,12 +9,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 @Path("/sports")
 public class SportsService {
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,8 +38,13 @@ public class SportsService {
 
         String outputString = "You want the full schedule for " + sport;
 
-        ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        // CALL API to get full season with updated zip codes
+
+        GameSchedule schedule = new GameSchedule(sport);
+        List<GameentryItem> returnGames = schedule.getSchedule();
+
+        ObjectMapper returnMapper = new ObjectMapper();
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
         return Response.status(200).entity(output).build();
     }
 
@@ -119,8 +128,33 @@ public class SportsService {
         String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode +
                 " on or after " + fromDate;
 
-        ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        //  Get all the Zip codes within radius
+        RadiusCityList zipList = new RadiusCityList(zipCode,radius);
+        HashSet<String> zipCities = zipList.findRadiusCities();
+
+        // CALL API to get full season with updated zip codes
+
+        GameSchedule schedule = new GameSchedule(sport);
+        List<GameentryItem> games = schedule.getSchedule();
+
+        // LOOP AND ONLY RETURN MATCHING ZIPS and if game date >= fromDate
+        // && currentGame.getDate() >= fromDate
+
+        LocalDate gameLocalDate;
+        LocalDate fromLocalDate = LocalDate.parse(fromDate, formatter);
+
+        List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
+        for (GameentryItem currentGame: games) {
+            gameLocalDate = LocalDate.parse(currentGame.getDate(), formatter);
+
+            if (zipCities.contains(currentGame.getZipCode())
+                    && (gameLocalDate.isEqual(fromLocalDate) || gameLocalDate.isAfter(fromLocalDate))) {
+                returnGames.add(currentGame);
+            }
+        }
+
+        ObjectMapper returnMapper = new ObjectMapper();
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
         return Response.status(200).entity(output).build();
     }
 
@@ -136,8 +170,36 @@ public class SportsService {
         String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode +
                 " between the dates of " + fromDate + " & " + toDate;
 
-        ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        //  Get all the Zip codes within radius
+        RadiusCityList zipList = new RadiusCityList(zipCode,radius);
+        HashSet<String> zipCities = zipList.findRadiusCities();
+
+        // CALL API to get full season with updated zip codes
+
+        GameSchedule schedule = new GameSchedule(sport);
+        List<GameentryItem> games = schedule.getSchedule();
+
+        // LOOP AND ONLY RETURN MATCHING ZIPS and if game date >= fromDate
+        // && currentGame.getDate() >= fromDate
+        // && currentGame.getDate() <= toDate
+
+        LocalDate gameLocalDate;
+        LocalDate fromLocalDate = LocalDate.parse(fromDate, formatter);
+        LocalDate toLocalDate = LocalDate.parse(toDate, formatter);
+
+        List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
+        for (GameentryItem currentGame: games) {
+            gameLocalDate = LocalDate.parse(currentGame.getDate(), formatter);
+
+            if (zipCities.contains(currentGame.getZipCode())
+                    && (gameLocalDate.isEqual(fromLocalDate) || gameLocalDate.isAfter(fromLocalDate))
+                    && (gameLocalDate.isEqual(toLocalDate) || gameLocalDate.isBefore(toLocalDate))) {
+                returnGames.add(currentGame);
+            }
+        }
+
+        ObjectMapper returnMapper = new ObjectMapper();
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
         return Response.status(200).entity(output).build();
     }
 

@@ -19,11 +19,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class ApiTest {
+
+    @Test
+    public void dateTest() throws Exception {
+        //Integer dateInt = Integer.valueOf(currentGame.getDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate gameLocalDate = LocalDate.parse("2017-11-08", formatter);
+        LocalDate fromLocalDate = LocalDate.parse("2017-11-09", formatter);
+
+        if (gameLocalDate.isEqual(fromLocalDate)) {
+            System.out.println(gameLocalDate + " is equal to " + fromLocalDate);
+        }
+        if (gameLocalDate.isAfter(fromLocalDate)) {
+            System.out.println(gameLocalDate + " is after to " + fromLocalDate);
+        }
+        if (gameLocalDate.isBefore(fromLocalDate)) {
+            System.out.println(gameLocalDate + " is before to " + fromLocalDate);
+        }
+
+    }
 
     @Test
     public void SportsApiTest() throws Exception {
