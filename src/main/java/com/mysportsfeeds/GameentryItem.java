@@ -32,6 +32,9 @@ public class GameentryItem{
 	@JsonProperty("location")
 	private String location;
 
+	@JsonProperty("zipCode")
+	private String zipCode;
+
 	@JsonProperty("id")
 	private String id;
 
@@ -116,6 +119,14 @@ public class GameentryItem{
 
 	public String getTime(){
 		return time;
+	}
+
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
 
 	@Override

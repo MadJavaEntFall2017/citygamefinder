@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysportsfeeds.GameResponse;
 import com.mysportsfeeds.GameentryItem;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import edu.matc.entity.Stadiums;
+import edu.matc.persistence.StadiumsDao;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,11 +64,29 @@ public class GameSchedule {
 
     public List<GameentryItem> updateZip (GameResponse response)  {
 
-        List <GameentryItem> list3 = response.getFullgameschedule().getGameentry();
-        for (GameentryItem game: list3) {
-            game.setZipCode(zipDao.getZip(game.getLocation()));
+        StadiumsDao dao = new StadiumsDao();
+        List<Stadiums> stadiums = dao.getAllStadiums();
+
+        List <GameentryItem> gameDetails = response.getFullgameschedule().getGameentry();
+
+        for (GameentryItem game: gameDetails) {
+            game.setZipCode(findStadiumZip(game.getLocation(), stadiums));
         }
-        return list3;
+
+        return gameDetails;
+    }
+
+    public String findStadiumZip (String stadiumName, List<Stadiums> stadiums) {
+
+        String zipCode = "";
+        for (Stadiums currentStadium: stadiums) {
+            if (stadiumName.equals(currentStadium.getStadiumName())) {
+                zipCode = currentStadium.getZipCode();
+            }
+        }
+
+        return zipCode;
+
     }
 
 }

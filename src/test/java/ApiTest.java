@@ -4,6 +4,7 @@ import com.mysportsfeeds.GameentryItem;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.zipcodeapi.ZipCodesItem;
 import com.zipcodeapi.ZipResponse;
+import edu.matc.controller.GameSchedule;
 import edu.matc.controller.RadiusCityList;
 import org.junit.Test;
 
@@ -119,45 +120,27 @@ public class ApiTest {
     @Test
     public void TestGroupAPI() throws Exception {
 
-        // Need all the radius cities
+        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList("53718","200");
         HashSet<String> zipCities = zipList.findRadiusCities();
 
 
-        //CALL API
-        URL url = new URL("https://api.mysportsfeeds.com/v1.1/pull/" + "nfl" + "/current/full_game_schedule.json");
-        String encoding = Base64.encode ("madentjava2017:greatlakes".getBytes());
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setDoOutput(true);
-        connection.setRequestProperty  ("Authorization", "Basic " + encoding);
-        InputStream content = (InputStream)connection.getInputStream();
-        BufferedReader in = new BufferedReader (new InputStreamReader(content));
-        String jsonResponse="";
-        String line;
-        while ((line = in.readLine()) != null) {
-            jsonResponse = jsonResponse + line;
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        GameResponse gameResponse = mapper.readValue(jsonResponse,GameResponse.class);
+        // CALL API to get full season with updated zip codes
 
+        GameSchedule schedule = new GameSchedule("nfl");
+        List<GameentryItem> games = schedule.getSchedule();
 
+        // LOOP AND ONLY RETURN MATCHING ZIPS
 
-        // LOOP AND ONLY RETURN MATCHING CITIES
-
-        List<GameentryItem> games = gameResponse.getFullgameschedule().getGameentry();
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
-
-        for (GameentryItem game: games) {
-            if (zipCities.contains(game.getHomeTeam().getCity())) {
-                returnGames.add(game);
+        for (GameentryItem currentGame: games) {
+            if (zipCities.contains(currentGame.getZipCode())) {
+                returnGames.add(currentGame);
             }
         }
 
         ObjectMapper returnMapper = new ObjectMapper();
         String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
-
-
 
     }
 

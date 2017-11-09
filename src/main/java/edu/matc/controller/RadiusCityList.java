@@ -56,10 +56,8 @@ public class RadiusCityList {
         HashSet<String> zipCities = new HashSet<String>();
         List <ZipCodesItem> zip = zipResponse.getZipCodes();
 
-
-
         for (ZipCodesItem city: zip) {
-            zipCities.add(city.getCity());
+            zipCities.add(city.getZipCode());
         }
 
         return zipCities;

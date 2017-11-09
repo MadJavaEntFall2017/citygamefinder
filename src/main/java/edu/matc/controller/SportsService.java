@@ -47,10 +47,31 @@ public class SportsService {
     public Response getMessage(@PathParam("zip") String zipCode,
                                @PathParam("radius") String radius)  throws Exception{
 
-        String outputString = "You want the games of all sports within " + radius + " miles of " + zipCode;
 
-        ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        RadiusCityList zipList = new RadiusCityList(zipCode,radius);
+        HashSet<String> zipCities = zipList.findRadiusCities();
+
+        GameSchedule nflSchedule = new GameSchedule("NFL");
+        GameSchedule nbaSchedule = new GameSchedule("NBA");
+        GameSchedule nhlSchedule = new GameSchedule("NHL");
+        GameSchedule mlbSchedule = new GameSchedule("MLB");
+
+        List<GameentryItem> games = new ArrayList<GameentryItem>();
+
+        games.addAll(nflSchedule.getSchedule());
+        games.addAll(nbaSchedule.getSchedule());
+        games.addAll(nhlSchedule.getSchedule());
+        games.addAll(mlbSchedule.getSchedule());
+
+        List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
+        for (GameentryItem currentGame: games) {
+            if (zipCities.contains(currentGame.getZipCode())) {
+                returnGames.add(currentGame);
+            }
+        }
+
+        ObjectMapper returnMapper = new ObjectMapper();
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
         return Response.status(200).entity(output).build();
     }
 
@@ -63,26 +84,21 @@ public class SportsService {
 
         String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode;
 
-        // Need all the radius zip codes
+        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-
-        //CALL API to get full season
+        // CALL API to get full season with updated zip codes
 
         GameSchedule schedule = new GameSchedule(sport);
-        
+        List<GameentryItem> games = schedule.getSchedule();
 
-
-
-
-        // LOOP AND ONLY RETURN MATCHING CITIES
-
+        // LOOP AND ONLY RETURN MATCHING ZIPS
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
-        for (GameentryItem game: games) {
-            if (zipCities.contains(game.getHomeTeam().getCity())) {
-                returnGames.add(game);
+        for (GameentryItem currentGame: games) {
+            if (zipCities.contains(currentGame.getZipCode())) {
+                returnGames.add(currentGame);
             }
         }
 
