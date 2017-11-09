@@ -20,9 +20,12 @@ public class RadiusCityList {
 
     }
 
-    public void setZipCode(String zipCode){
+    public RadiusCityList(String zipCode, String mileRadius) {
         this.zipCode = zipCode;
+        this.mileRadius = mileRadius;
     }
+
+    public void setZipCode(String zipCode){this.zipCode = zipCode; }
 
     public String getZipCode(){
         return zipCode;
@@ -37,7 +40,7 @@ public class RadiusCityList {
     }
 
 
-    public List<ZipCodesItem> findRadiusCities() throws IOException {
+    public HashSet<String> findRadiusCities() throws IOException {
 
         String searchString = "https://www.zipcodeapi.com/rest/3itPa6fYyZJzyc0puZEjvJOwAzbpffOlwLwBmItNEepfUHQzA0zvmyPPikTBXbIi/"
         + "radius.json/" + zipCode + "/" + mileRadius + "/mile";
@@ -49,7 +52,17 @@ public class RadiusCityList {
 
         ObjectMapper mapper = new ObjectMapper();
         ZipResponse zipResponse = mapper.readValue(jsonResponse,ZipResponse.class);
-        return zipResponse.getZipCodes();
+
+        HashSet<String> zipCities = new HashSet<String>();
+        List <ZipCodesItem> zip = zipResponse.getZipCodes();
+
+
+
+        for (ZipCodesItem city: zip) {
+            zipCities.add(city.getCity());
+        }
+
+        return zipCities;
     }
 
 

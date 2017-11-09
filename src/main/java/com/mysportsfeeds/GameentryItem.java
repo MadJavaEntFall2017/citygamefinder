@@ -8,43 +8,33 @@ import javax.annotation.Generated;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GameentryItem{
 
-	// show
 	@JsonProperty("date")
 	private String date;
 
-	// dont show
 	@JsonProperty("originalTime")
 	private Object originalTime;
 
-	// show
 	@JsonProperty("awayTeam")
 	private AwayTeam awayTeam;
 
-	// dont show
 	@JsonProperty("originalDate")
 	private Object originalDate;
 
-	// dont show
 	@JsonProperty("delayedOrPostponedReason")
 	private Object delayedOrPostponedReason;
 
-	// dont show
 	@JsonProperty("scheduleStatus")
 	private String scheduleStatus;
 
-	// show
 	@JsonProperty("homeTeam")
 	private HomeTeam homeTeam;
 
-	// show
 	@JsonProperty("location")
 	private String location;
 
-	// dont show
 	@JsonProperty("id")
 	private String id;
 
-	// show
 	@JsonProperty("time")
 	private String time;
 

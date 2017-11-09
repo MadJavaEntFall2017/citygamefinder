@@ -1,6 +1,7 @@
 package edu.matc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysportsfeeds.GameentryItem;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -8,19 +9,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
-@Path("/games")
+@Path("/sports")
 public class SportsService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessage() throws Exception {
 
-        String outputString = "You want the full schedule for all 4 sports";
-
-        SportCityList cityList = new SportCityList();
-        HashSet<String> cities = cityList.findSportCities();
+        String outputString = "You want to know what sports we support";
 
         ObjectMapper mapper = new ObjectMapper();
         String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
@@ -38,6 +38,8 @@ public class SportsService {
         String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
         return Response.status(200).entity(output).build();
     }
+
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,8 +63,31 @@ public class SportsService {
 
         String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode;
 
-        ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        // Need all the radius zip codes
+        RadiusCityList zipList = new RadiusCityList(zipCode,radius);
+        HashSet<String> zipCities = zipList.findRadiusCities();
+
+
+        //CALL API to get full season
+
+        GameSchedule schedule = new GameSchedule(sport);
+        
+
+
+
+
+        // LOOP AND ONLY RETURN MATCHING CITIES
+
+
+        List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
+        for (GameentryItem game: games) {
+            if (zipCities.contains(game.getHomeTeam().getCity())) {
+                returnGames.add(game);
+            }
+        }
+
+        ObjectMapper returnMapper = new ObjectMapper();
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
         return Response.status(200).entity(output).build();
     }
 
