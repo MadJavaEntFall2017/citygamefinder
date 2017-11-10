@@ -141,17 +141,11 @@ public class ApiTest {
     @Test
     public void TestGroupAPI() throws Exception {
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList("53718","200");
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule("nfl");
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
         for (GameentryItem currentGame: games) {

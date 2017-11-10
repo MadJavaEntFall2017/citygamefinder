@@ -36,10 +36,6 @@ public class SportsService {
     @Path("/{sport}")
     public Response getMessage(@PathParam("sport") String sport)  throws Exception{
 
-        String outputString = "You want the full schedule for " + sport;
-
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> returnGames = schedule.getSchedule();
 
@@ -55,7 +51,6 @@ public class SportsService {
     @Path("/{zip}/{radius}")
     public Response getMessage(@PathParam("zip") String zipCode,
                                @PathParam("radius") String radius)  throws Exception{
-
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
@@ -93,16 +88,11 @@ public class SportsService {
 
         String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode;
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
         for (GameentryItem currentGame: games) {
@@ -125,20 +115,12 @@ public class SportsService {
                                @PathParam("radius") String radius,
                                @PathParam("fromDate") String fromDate)  throws Exception{
 
-        String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode +
-                " on or after " + fromDate;
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS and if game date >= fromDate
-        // && currentGame.getDate() >= fromDate
 
         LocalDate gameLocalDate;
         LocalDate fromLocalDate = LocalDate.parse(fromDate, formatter);
@@ -167,21 +149,12 @@ public class SportsService {
                                @PathParam("fromDate") String fromDate,
                                @PathParam("toDate") String toDate)  throws Exception{
 
-        String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode +
-                " between the dates of " + fromDate + " & " + toDate;
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS and if game date >= fromDate
-        // && currentGame.getDate() >= fromDate
-        // && currentGame.getDate() <= toDate
 
         LocalDate gameLocalDate;
         LocalDate fromLocalDate = LocalDate.parse(fromDate, formatter);
@@ -202,6 +175,4 @@ public class SportsService {
         String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
         return Response.status(200).entity(output).build();
     }
-
-
 }
