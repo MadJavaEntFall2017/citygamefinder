@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="sports@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
+    <root id="1"/>
+    <schema id="2" parent="1" name="sports">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="information_schema"/>
+    <schema id="4" parent="1" name="moviecalendar"/>
+    <schema id="5" parent="1" name="moviecalendartest"/>
+    <schema id="6" parent="1" name="mysql"/>
+    <schema id="7" parent="1" name="performance_schema"/>
+    <schema id="8" parent="1" name="phpmyadmin"/>
+    <schema id="9" parent="1" name="sample"/>
+    <schema id="10" parent="1" name="sample_test"/>
+    <schema id="11" parent="1" name="streamsearch"/>
+    <schema id="12" parent="1" name="streamsearchtest"/>
+    <schema id="13" parent="1" name="sys"/>
+    <schema id="14" parent="1" name="week6exercise"/>
+    <table id="15" parent="2" name="stadiums"/>
+    <column id="16" parent="15" name="stadium_name">
+      <Position>1</Position>
+      <DataType>varchar(100)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="17" parent="15" name="zip_code">
+      <Position>2</Position>
+      <DataType>varchar(5)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="18" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>stadium_name</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>
