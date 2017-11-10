@@ -1,7 +1,11 @@
 package edu.matc.controller;
 
+import com.citygamefinder.SportsItem;
+import com.citygamefinder.SportsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysportsfeeds.GameentryItem;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,10 +28,24 @@ public class SportsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessage() throws Exception {
 
-        String outputString = "You want to know what sports we support";
+        List <SportsItem> sportsList = new ArrayList<SportsItem>();
+
+        SportsItem nfl = new SportsItem();
+        SportsItem nba = new SportsItem();
+        SportsItem nhl = new SportsItem();
+
+        nfl.setSport("NFL");
+        nba.setSport("NBA");
+        nhl.setSport("NHL");
+
+        sportsList.add(nfl);
+        sportsList.add(nba);
+        sportsList.add(nhl);
+        SportsResponse response = new SportsResponse();
+        response.setSports(sportsList);
 
         ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response);
         return Response.status(200).entity(output).build();
     }
 
@@ -176,3 +194,4 @@ public class SportsService {
         return Response.status(200).entity(output).build();
     }
 }
+
