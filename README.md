@@ -20,7 +20,7 @@ Via these URI's:
 * http://13.59.5.68:8080/citygamefinder/sports/nfl
   - "You want the full schedule for NFL"
 * http://13.59.5.68:8080/citygamefinder/sports/53718/150
-  - "You want the games of all sports within 100 miles of 53718"
+  - "You want the games of all sports within 150 miles of 53718"
 * http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150
   - "You want the NFL games within miles 150 of 53718"
 * http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/12-01-17
