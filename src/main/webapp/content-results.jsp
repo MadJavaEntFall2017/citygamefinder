@@ -9,7 +9,7 @@
 
 <div class="container-fluid">
     <br>
-    <h6>Search Results</h6>
+    <h3>Search Results</h3>
     <table id="gameTable" class="display" cellspacing="0" width="100%">
         <thead>
             <th>Date</th>

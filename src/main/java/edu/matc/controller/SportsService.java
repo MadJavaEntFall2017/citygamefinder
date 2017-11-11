@@ -5,8 +5,6 @@ import com.citygamefinder.SportsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysportsfeeds.Fullgameschedule;
 import com.mysportsfeeds.GameentryItem;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

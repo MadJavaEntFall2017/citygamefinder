@@ -15,7 +15,7 @@
             <label for="zipcode-input" class="col-2 col-form-label">I will be in: </label>
             <div class="col-2">
                 <input class="form-control" type="number" name="zipcode-input" id="zipcode-input"
-                       minlength="5" maxlength="5" placeholder="Zip Code">
+                       placeholder="Zip Code">
             </div>
         </div>
 
@@ -40,17 +40,10 @@
         <%-- Mile Select --%>
 
         <div class="form-group row">
-            <label for="mile-input" class="col-2 col-form-label">Find Games Within (miles):</label>
+            <label for="mile-input" class="col-2 col-form-label">Find Games Within: </label>
             <div class="col-2">
-                <select class="form-control" name="mile-input" id="mile-input">
-                    <option>No Mileage</option>
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>75</option>
-                    <option>100</option>
-                    <option>250</option>
-                </select>
+                <input class="form-control" type="number" name="mile-input" id="mile-input"
+                       placeholder="Miles">
             </div>
         </div>
 
@@ -60,7 +53,7 @@
             <label for="sport-input" class="col-2 col-form-label">Select Sport:</label>
             <div class="col-2">
                 <select class="form-control" name="sport-input" id="sport-input">
-                    <option>All</option>
+                    <option></option>
                     <c:forEach items="${sports}" var="sport">
                         <option>${sport}</option>
                     </c:forEach>
@@ -76,33 +69,6 @@
             </div>
         </div>
     </form>
-
-    <script>
-        function onSubmit()
-        {
-
-
-
-            var fromDate=document.getElementById('from-date-input').value;
-            var toDate=document.getElementById('to-date-input').value;
-            var zip=document.getElementById('zipcode-input').value;
-            var mile=document.getElementById('zipcode-input').value;
-            
-            if (zip.length < 1)
-            {
-                window.alert("Zip is blank");
-                return false;
-            }
-            
-            var fields = $("input[name='zipcode-input']").serializeArray();
-            if (fields.length === 0)
-            {
-                alert('Please select at least one sport.');
-                return false;
-            }
-        }
-        $('#city_form').submit(onSubmit)
-    </script>
 
 </div>
 
