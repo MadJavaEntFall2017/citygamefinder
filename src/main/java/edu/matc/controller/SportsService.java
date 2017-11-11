@@ -3,6 +3,7 @@ package edu.matc.controller;
 import com.citygamefinder.SportsItem;
 import com.citygamefinder.SportsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysportsfeeds.Fullgameschedule;
 import com.mysportsfeeds.GameentryItem;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +42,7 @@ public class SportsService {
         sportsList.add(nfl);
         sportsList.add(nba);
         sportsList.add(nhl);
+
         SportsResponse response = new SportsResponse();
         response.setSports(sportsList);
 
@@ -57,8 +59,10 @@ public class SportsService {
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> returnGames = schedule.getSchedule();
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -92,8 +96,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -103,8 +109,6 @@ public class SportsService {
     public Response getMessage(@PathParam("sport") String sport,
                                @PathParam("zip") String zipCode,
                                @PathParam("radius") String radius)  throws Exception{
-
-        String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode;
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
@@ -119,8 +123,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -153,8 +159,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -189,8 +197,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 }
