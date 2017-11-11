@@ -1,4 +1,3 @@
-5
 # citygamefinder
 
 Our project team loves watching sports. Home AND Away games. 
