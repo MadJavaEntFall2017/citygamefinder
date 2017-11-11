@@ -1,6 +1,7 @@
+<%@include file="taglib.jsp"%>
 <div class="container">
 
-    <form class="form-horizontal" action="searchGames" method="post"  id="city_form">
+    <form class="form-horizontal" action="showResults" method="post"  id="city_form">
 
         <%-- Form Title --%>
 
@@ -13,8 +14,8 @@
         <div class="form-group row">
             <label for="zipcode-input" class="col-2 col-form-label">I will be in: </label>
             <div class="col-2">
-                <input class="form-control" type="number" id="zipcode-input" required
-                       minlength="5" maxlength="5" placeholder="Zip Code">
+                <input class="form-control" type="number" name="zipcode-input" id="zipcode-input"
+                       placeholder="Zip Code">
             </div>
         </div>
 
@@ -23,7 +24,7 @@
         <div class="form-group row">
             <label for="from-date-input" class="col-2 col-form-label">From:</label>
             <div class="col-4">
-                <input class="form-control" type="date" id="from-date-input" required>
+                <input class="form-control" type="date" name="from-date-input" id="from-date-input" >
             </div>
         </div>
 
@@ -32,50 +33,31 @@
         <div class="form-group row">
             <label for="to-date-input" class="col-2 col-form-label">To:</label>
             <div class="col-4">
-                <input class="form-control" type="date" id="to-date-input" required>
+                <input class="form-control" type="date" name="to-date-input" id="to-date-input" >
             </div>
         </div>
 
         <%-- Mile Select --%>
 
         <div class="form-group row">
-            <label for="to-date-input" class="col-2 col-form-label">Find Games Within (miles):</label>
+            <label for="mile-input" class="col-2 col-form-label">Find Games Within: </label>
             <div class="col-2">
-                <select class="form-control" id="mile-input">
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>75</option>
-                    <option>100</option>
-                    <option>250</option>
-                </select>
+                <input class="form-control" type="number" name="mile-input" id="mile-input"
+                       placeholder="Miles">
             </div>
         </div>
 
-        <%-- Checkboxes --%>
+        <%-- Sport Select --%>
 
         <div class="form-group row">
-            <div class="col-10 offset-2">
-                <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                        <input class="form-check-input" name="list" type="checkbox" id="checkbox-nba" value="option1"> NBA
-                    </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                        <input class="form-check-input" name="list" type="checkbox" id="checkbox-nfl" value="option1"> NFL
-                    </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                        <input class="form-check-input" name="list" type="checkbox" id="checkbox-nhl" value="option1"> NHL
-                    </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                        <input class="form-check-input" name="list" type="checkbox" id="checkbox-mlb" value="option1"> MLB
-                    </label>
-                </div>
+            <label for="sport-input" class="col-2 col-form-label">Select Sport:</label>
+            <div class="col-2">
+                <select class="form-control" name="sport-input" id="sport-input">
+                    <option></option>
+                    <c:forEach items="${sports}" var="sport">
+                        <option>${sport}</option>
+                    </c:forEach>
+                </select>
             </div>
         </div>
 
@@ -88,18 +70,5 @@
         </div>
     </form>
 
-
-    <script>
-        function onSubmit()
-        {
-            var fields = $("input[name='list']").serializeArray();
-            if (fields.length === 0)
-            {
-                alert('Please select at least one sport.');
-                return false;
-            }
-        }
-        $('#city_form').submit(onSubmit)
-    </script>
-
 </div>
+

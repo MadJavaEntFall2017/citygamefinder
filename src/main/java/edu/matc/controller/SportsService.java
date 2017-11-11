@@ -1,6 +1,9 @@
 package edu.matc.controller;
 
+import com.citygamefinder.SportsItem;
+import com.citygamefinder.SportsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysportsfeeds.Fullgameschedule;
 import com.mysportsfeeds.GameentryItem;
 
 import javax.ws.rs.GET;
@@ -24,10 +27,25 @@ public class SportsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessage() throws Exception {
 
-        String outputString = "You want to know what sports we support";
+        List <SportsItem> sportsList = new ArrayList<SportsItem>();
+
+        SportsItem nfl = new SportsItem();
+        SportsItem nba = new SportsItem();
+        SportsItem nhl = new SportsItem();
+
+        nfl.setSport("NFL");
+        nba.setSport("NBA");
+        nhl.setSport("NHL");
+
+        sportsList.add(nfl);
+        sportsList.add(nba);
+        sportsList.add(nhl);
+
+        SportsResponse response = new SportsResponse();
+        response.setSports(sportsList);
 
         ObjectMapper mapper = new ObjectMapper();
-        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(outputString);
+        String output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response);
         return Response.status(200).entity(output).build();
     }
 
@@ -36,15 +54,13 @@ public class SportsService {
     @Path("/{sport}")
     public Response getMessage(@PathParam("sport") String sport)  throws Exception{
 
-        String outputString = "You want the full schedule for " + sport;
-
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> returnGames = schedule.getSchedule();
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -55,7 +71,6 @@ public class SportsService {
     @Path("/{zip}/{radius}")
     public Response getMessage(@PathParam("zip") String zipCode,
                                @PathParam("radius") String radius)  throws Exception{
-
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
@@ -79,8 +94,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -91,18 +108,11 @@ public class SportsService {
                                @PathParam("zip") String zipCode,
                                @PathParam("radius") String radius)  throws Exception{
 
-        String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode;
-
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
         for (GameentryItem currentGame: games) {
@@ -111,8 +121,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -125,20 +137,12 @@ public class SportsService {
                                @PathParam("radius") String radius,
                                @PathParam("fromDate") String fromDate)  throws Exception{
 
-        String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode +
-                " on or after " + fromDate;
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS and if game date >= fromDate
-        // && currentGame.getDate() >= fromDate
 
         LocalDate gameLocalDate;
         LocalDate fromLocalDate = LocalDate.parse(fromDate, formatter);
@@ -153,8 +157,10 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
 
@@ -167,21 +173,12 @@ public class SportsService {
                                @PathParam("fromDate") String fromDate,
                                @PathParam("toDate") String toDate)  throws Exception{
 
-        String outputString = "You want the " + sport + " games within " + radius + " miles of " + zipCode +
-                " between the dates of " + fromDate + " & " + toDate;
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS and if game date >= fromDate
-        // && currentGame.getDate() >= fromDate
-        // && currentGame.getDate() <= toDate
 
         LocalDate gameLocalDate;
         LocalDate fromLocalDate = LocalDate.parse(fromDate, formatter);
@@ -198,10 +195,11 @@ public class SportsService {
             }
         }
 
+        Fullgameschedule returnSchedule = new Fullgameschedule();
+        returnSchedule.setGameentry(returnGames);
         ObjectMapper returnMapper = new ObjectMapper();
-        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
+        String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
     }
-
-
 }
+

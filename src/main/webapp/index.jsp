@@ -1,5 +1,4 @@
 <%@include file="taglib.jsp"%>
-<c:set var="title" value="City Game Finder" />
 <%@include file="head.jsp"%>
 <html>
 <body>

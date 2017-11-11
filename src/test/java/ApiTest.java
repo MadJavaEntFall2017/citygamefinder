@@ -141,17 +141,11 @@ public class ApiTest {
     @Test
     public void TestGroupAPI() throws Exception {
 
-        //  Get all the Zip codes within radius
         RadiusCityList zipList = new RadiusCityList("53718","200");
         HashSet<String> zipCities = zipList.findRadiusCities();
 
-
-        // CALL API to get full season with updated zip codes
-
         GameSchedule schedule = new GameSchedule("nfl");
         List<GameentryItem> games = schedule.getSchedule();
-
-        // LOOP AND ONLY RETURN MATCHING ZIPS
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
         for (GameentryItem currentGame: games) {
@@ -162,9 +156,25 @@ public class ApiTest {
 
         ObjectMapper returnMapper = new ObjectMapper();
         String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnGames);
-
     }
 
+    @Test
+    public void gettingSports() throws Exception {
+        List<String> sports = new ArrayList<String>();
+        URL url = new URL("http://13.59.5.68:8080/citygamefinder/sports");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
+        InputStream content = (InputStream)connection.getInputStream();
+        BufferedReader in = new BufferedReader (new InputStreamReader(content));
+        String jsonResponse="";
+        String line;
+        while ((line = in.readLine()) != null) {
+            jsonResponse = jsonResponse + line;
+        }
+        String bob = "bob";
+
+    }
 
 
 }
