@@ -23,7 +23,7 @@ Via these URI's:
   - "You want the games of all sports within 150 miles of 53718"
 * http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150
   - "You want the NFL games within miles 150 of 53718"
-* http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/12-01-17
-  - "You want the NFL games within 150 miles of 53718 on or after 12-01-17"
-* http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/12-01-17/12-25-17
-  - "You want the NFL games within 150 miles of 53718 between the dates of 12-01-17 & 12-25-17"
+* http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/2017-12-01
+  - "You want the NFL games within 150 miles of 53718 on or after 2017-12-01"
+* http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/2017-12-01/2017-12-25
+  - "You want the NFL games within 150 miles of 53718 between the dates of 2017-12-01 & 2017-12-25"
