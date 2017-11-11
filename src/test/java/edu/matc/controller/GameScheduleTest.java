@@ -32,14 +32,14 @@ public class GameScheduleTest {
 
     @Test
     public void gameApiCallTest() throws Exception {
-        GameResponse gameResponse = gameSchedule.gameApiCall("NFL");
+        GameResponse gameResponse = gameSchedule.gameApiCall();
 
         assertTrue(gameResponse.getFullgameschedule() != null);
     }
 
     @Test
     public void updateZipTest() throws Exception {
-        GameResponse gameResponse = gameSchedule.gameApiCall("NFL");
+        GameResponse gameResponse = gameSchedule.gameApiCall();
 
         List<GameentryItem> gameentryItems = gameSchedule.updateZip(gameResponse);
 

@@ -16,24 +16,61 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class handles the code for getting the game schedule for a specific sport
+ *
+ * @author Great Lakes Team
+ */
 public class GameSchedule {
 
     private String sport;
 
+    /**
+     * Generic class constructor
+     */
     public GameSchedule() {
 
     }
 
+    /**
+     * Class constructor with a single string input
+     *
+     * @param sport The sport to get the schedule for
+     */
     public GameSchedule(String sport) {
         this.sport = sport;
     }
 
+    /**
+     * Returns the String value for the internal sport variable
+     *
+     * @return the sport
+     */
+    public String getSport() {
+        return sport;
+    }
+
+    /**
+     * Sets the String value for the internal sport variable
+     *
+     * @param sport the sport to find the schedule for
+     */
+    public void setSport(String sport) {
+        this.sport = sport;
+    }
+
+    /**
+     * Main processing for getting the schedule for a given sport
+     *
+     * @return a list of GameentryItems
+     * @throws IOException
+     */
     public List<GameentryItem> getSchedule() throws IOException {
 
         List<GameentryItem> gameSchedule = new ArrayList<GameentryItem>();
 
         try {
-            GameResponse response = gameApiCall(sport);
+            GameResponse response = gameApiCall();
             gameSchedule = updateZip(response);
         } catch(Exception e) {
             e.printStackTrace();
@@ -41,8 +78,13 @@ public class GameSchedule {
         return gameSchedule;
     }
 
-
-    public GameResponse gameApiCall (String sport) throws IOException {
+    /**
+     * Sets up and calls the api using the internal sport variable and returns the api GameResponse object
+     *
+     * @return the GameResponse from the api call
+     * @throws IOException
+     */
+    public GameResponse gameApiCall () throws IOException {
 
         URL url = new URL("https://api.mysportsfeeds.com/v1.1/pull/" + sport
                 + "/current/full_game_schedule.json");
@@ -62,6 +104,12 @@ public class GameSchedule {
         return mapper.readValue(jsonResponse,GameResponse.class);
     }
 
+    /**
+     * Uses the GameResponse to find and set the zip code for all games for the full game schedule
+     *
+     * @param response The GameResponse item from the api
+     * @return The GameentryItem from the api but with updated zip codes
+     */
     public List<GameentryItem> updateZip (GameResponse response)  {
 
         StadiumsDao dao = new StadiumsDao();
@@ -76,6 +124,13 @@ public class GameSchedule {
         return gameDetails;
     }
 
+    /**
+     * Uses the stadium name and and list of stadiums to loop through find the zip code for the stadium name
+     *
+     * @param stadiumName the name of the stadium
+     * @param stadiums the list of all possible stadiums
+     * @return the zip code for the matched stadium
+     */
     public String findStadiumZip (String stadiumName, List<Stadiums> stadiums) {
 
         String zipCode = "";

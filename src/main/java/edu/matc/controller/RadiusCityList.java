@@ -11,35 +11,74 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Handles the calls to the zipcodeapi to get all zip codes within a given radius
+ *
+ * @author Great Lakes Team
+ */
 public class RadiusCityList {
 
     private String zipCode;
     private String mileRadius;
 
+    /**
+     * Generic class constructor
+     */
     public RadiusCityList() {
 
     }
 
+    /**
+     * Class constructor with the zip code and mile radius being passed
+     *
+     * @param zipCode the zip code to be used
+     * @param mileRadius the radius to look for cities
+     */
     public RadiusCityList(String zipCode, String mileRadius) {
         this.zipCode = zipCode;
         this.mileRadius = mileRadius;
     }
 
+    /**
+     * Sets the local zip code variable
+     *
+     * @param zipCode the zip code to use
+     */
     public void setZipCode(String zipCode){this.zipCode = zipCode; }
 
+    /**
+     * Gets the local zip code variable
+     *
+     * @return the local zip code variable
+     */
     public String getZipCode(){
         return zipCode;
     }
 
+    /**
+     * Sets the local mile radius variable
+     *
+     * @param mileRadius the mile radius to use
+     */
     public void setMileRadius(String mileRadius){
         this.mileRadius = mileRadius;
     }
 
+    /**
+     * Gets the local mile radius variable
+     * @return the local mile radius variable
+     */
     public String getMileRadius(){
         return mileRadius;
     }
 
 
+    /**
+     * Handles the api call to find all zip codes within the given radius of the given zip code
+     *
+     * @return The HashSet of all zip codes within the given radius
+     * @throws IOException
+     */
     public HashSet<String> findRadiusCities() throws IOException {
 
         String searchString = "https://www.zipcodeapi.com/rest/3itPa6fYyZJzyc0puZEjvJOwAzbpffOlwLwBmItNEepfUHQzA0zvmyPPikTBXbIi/"
