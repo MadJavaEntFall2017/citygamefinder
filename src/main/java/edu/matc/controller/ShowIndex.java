@@ -54,8 +54,20 @@ import java.util.List;
 
     private List<String> getSports() throws IOException {
 
-        List<String> sports = new ArrayList<String>();
+        String json = callAPI();
+        ObjectMapper mapper = new ObjectMapper();
+        SportsResponse response = mapper.readValue(json,SportsResponse.class);
+        List <SportsItem> listSports = new ArrayList<SportsItem>();
+        listSports = response.getSports();
 
+        List<String> availableSports = new ArrayList<String>();
+        for (SportsItem currentSport: listSports) {
+            availableSports.add(currentSport.getSport());
+        }
+        return availableSports;
+    }
+
+    public String callAPI() throws IOException {
         URL url = new URL("http://13.59.5.68:8080/citygamefinder/sports");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -67,18 +79,7 @@ import java.util.List;
         while ((line = in.readLine()) != null) {
             jsonResponse = jsonResponse + line;
         }
-
-        ObjectMapper mapper = new ObjectMapper();
-        SportsResponse response = mapper.readValue(jsonResponse,SportsResponse.class);
-
-        List <SportsItem> listSports = new ArrayList<SportsItem>();
-        listSports = response.getSports();
-
-        for (SportsItem currentSport: listSports) {
-            sports.add(currentSport.getSport());
-        }
-
-        return sports;
+        return jsonResponse;
     }
 }
 

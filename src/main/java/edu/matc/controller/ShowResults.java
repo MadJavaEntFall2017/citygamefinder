@@ -43,53 +43,29 @@ import java.util.Set;
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String url = "/results.jsp";
-
         String zipCode = request.getParameter("zipcode-input");
         String fromDate = request.getParameter("from-date-input");
         String toDate = request.getParameter("to-date-input");
         String miles = request.getParameter("mile-input");
         String sport = request.getParameter("sport-input");
 
-        Fullgameschedule schedule = callService(sport,zipCode,miles,fromDate,toDate);
+        String callUrl = buildUrl(sport,zipCode,miles,fromDate,toDate);
+        Fullgameschedule schedule = callService(callUrl);
 
-        List<GameentryItem> games = new ArrayList<GameentryItem>();
-        games = schedule.getGameentry();
-
-        List<Result> results = new ArrayList<Result>();
-
-
-        for (GameentryItem currentGame: games) {
-            Result result = new Result();
-            result.setAwayTeam(currentGame.getAwayTeam().getName());
-            result.setDate(currentGame.getDate());
-            result.setHomeTeam(currentGame.getHomeTeam().getName());
-            result.setLocation(currentGame.getLocation());
-            result.setTime(currentGame.getTime());
-            result.setZipCode(currentGame.getZipCode());
-            results.add(result);
-        }
+        request.setAttribute("games", loadResults(schedule));
         request.setAttribute("title", "Search Results");
-        request.setAttribute("games", results);
-
+        String url = "/results.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
         dispatcher.forward(request, response);
 
-
     }
 
-    public Fullgameschedule callService(String sport, String zip, String miles, String fromDate, String toDate) throws IOException {
-
+    public String buildUrl(String sport, String zip, String miles, String fromDate, String toDate)  {
         StringBuilder urlCall = new StringBuilder();
         urlCall.append("http://13.59.5.68:8080/citygamefinder/sports");
-        Boolean allSports = false;
 
         if (sport != null && !sport.equals("")) {
-            if (sport.equals("All")) {
-                allSports = true;
-            } else {
-                urlCall.append("/" + sport);
-            }
+            urlCall.append("/" + sport);
         }
 
         if (zip != null && !zip.equals("")) {
@@ -108,8 +84,33 @@ import java.util.Set;
             urlCall.append("/" + toDate);
         }
 
-        URL url = new URL(urlCall.toString());
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        return urlCall.toString();
+
+    }
+
+    public List<Result> loadResults (Fullgameschedule schedule) {
+
+        List<GameentryItem> games = new ArrayList<GameentryItem>();
+        games = schedule.getGameentry();
+
+        List<Result> results = new ArrayList<Result>();
+        for (GameentryItem currentGame: games) {
+            Result result = new Result();
+            result.setAwayTeam(currentGame.getAwayTeam().getName());
+            result.setDate(currentGame.getDate());
+            result.setHomeTeam(currentGame.getHomeTeam().getName());
+            result.setLocation(currentGame.getLocation());
+            result.setTime(currentGame.getTime());
+            result.setZipCode(currentGame.getZipCode());
+            results.add(result);
+        }
+        return results;
+    }
+
+    public Fullgameschedule callService(String url) throws IOException {
+
+        URL callUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) callUrl.openConnection();
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
         InputStream content = (InputStream)connection.getInputStream();
@@ -121,9 +122,7 @@ import java.util.Set;
         }
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(jsonResponse,Fullgameschedule.class);
-
     }
-
 }
 
 
