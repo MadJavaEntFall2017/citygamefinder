@@ -70,5 +70,23 @@
         </div>
     </form>
 
+    <script>
+        function onSubmit()
+        {
+            var zip = document.getElementById("zipcode-input").value;
+            var fromDate = document.getElementById("from-date-input").value;
+            var toDate = document.getElementById("to-date-input").value;
+            var mile = document.getElementById("mile-input").value;
+            var e = document.getElementById("sport-input");
+            var sport = e.options[e.selectedIndex].value;
+
+            if (zip == "" && fromDate == "" && toDate == "" && mile == "" && sport == "") {
+                alert('Please select at least one item before submitting');
+                return false;
+            }
+        }
+        $('#city_form').submit(onSubmit)
+    </script>
+
 </div>
 
