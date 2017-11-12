@@ -18,11 +18,22 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * The SportsService class handles all combinations of calls to api and does the processing necessary
+ *
+ * @author Great Lakes Team
+ */
 @Path("/sports")
 public class SportsService {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    /**
+     * This method will call the mysportsfeeds api to return all available sports for our service
+     *
+     * @return the Response from the api processing
+     * @throws Exception if there is a general exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessage() throws Exception {
@@ -49,6 +60,13 @@ public class SportsService {
         return Response.status(200).entity(output).build();
     }
 
+    /**
+     * This method will call the mysportsfeeds api to return all games for a passed in sport
+     *
+     * @param sport the sport to use to find the schedules
+     * @return the Response from the api processing
+     * @throws Exception if there is a general exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{sport}")
@@ -64,8 +82,14 @@ public class SportsService {
         return Response.status(200).entity(output).build();
     }
 
-
-
+    /**
+     * The method will call the mysportsfeeds api to return all sports games with a given radius
+     *
+     * @param zipCode the zip code to use as the start point
+     * @param radius the radius to search within
+     * @return the Response from the api processing
+     * @throws Exception if there is a general exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{zip}/{radius}")
@@ -101,6 +125,15 @@ public class SportsService {
         return Response.status(200).entity(output).build();
     }
 
+    /**
+     * The method will call the mysportsfeeds api to return all games for a passed in sport with a given radius
+     *
+     * @param sport the sport to search for
+     * @param zipCode the zip code to use as the start point
+     * @param radius the radius to search within
+     * @return the Response from the api processing
+     * @throws Exception if there is a general exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{sport}/{zip}/{radius}")
@@ -129,6 +162,17 @@ public class SportsService {
     }
 
 
+    /**
+     * The method will call the mysportsfeeds api to return all games for a passed in sport with a given radius with a
+     * given start date
+     *
+     * @param sport the sport to search for
+     * @param zipCode the zip code to use as the start point
+     * @param radius the radius to search within
+     * @param fromDate the begin date to search for sports
+     * @return the Response from the api processing
+     * @throws Exception if there is a general exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{sport}/{zip}/{radius}/{fromDate}")
@@ -164,6 +208,18 @@ public class SportsService {
         return Response.status(200).entity(output).build();
     }
 
+    /**
+     * The method will call the mysportsfeeds api to return all games between passed in dates for a given sport within
+     * a given radius
+     *
+     * @param sport the sport to search for
+     * @param zipCode the zip code to use as the start point
+     * @param radius the radius to search within
+     * @param fromDate the begin date to search for sports
+     * @param toDate the end date to search for sports
+     * @return the Response from the api processing
+     * @throws Exception if there is a general exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{sport}/{zip}/{radius}/{fromDate}/{toDate}")
