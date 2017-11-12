@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * The SportsService class handles all combinations of calls to api and does the processing necessary
+ * The SportsService class handles all combinations of calls to api and does the processing necessary.
  *
  * @author Great Lakes Team
  */
