@@ -45,27 +45,6 @@ public class ApiTest {
             System.out.println(gameLocalDate + " is before to " + fromLocalDate);
         }
 
-        validateSportParam("NFL");
-        validateSportParam("NBA");
-        validateSportParam("AAA");
-        validateSportParam("nfl");
-        validateSportParam("NhL");
-        validateSportParam("mlb");
-
-
-
-    }
-
-    private void validateSportParam (String sport) {
-        switch (sport.toUpperCase()) {
-            case "NFL":
-            case "NHL":
-            case "NBA":
-                System.out.println(sport + " is valid");
-                break;
-            default:
-                System.out.println(sport + " is not in the list");
-        }
     }
 
     @Test

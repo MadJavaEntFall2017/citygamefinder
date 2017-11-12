@@ -29,13 +29,13 @@ public class SportsServiceTest {
         assertEquals(true, response.hasEntity());
     }
 
-    /*@Test
+    @Test
     public void getMessage1BadRequestTest() throws Exception {
         Response response = sportsService.getMessage("ABA");
         int status = response.getStatus();
 
         assertEquals(400, response.getStatus());
-    }*/
+    }
 
     @Test
     public void getMessage2Test() throws Exception {
