@@ -3,10 +3,13 @@ package edu.matc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zipcodeapi.ZipCodesItem;
 import com.zipcodeapi.ZipResponse;
+import org.apache.log4j.Logger;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -17,9 +20,12 @@ import java.util.List;
  * @author Great Lakes Team
  */
 public class RadiusCityList {
+    private final Logger log = Logger.getLogger(this.getClass());
 
     private String zipCode;
     private String mileRadius;
+    private Response.StatusType statusInfo;
+
 
     /**
      * Generic class constructor
@@ -72,6 +78,13 @@ public class RadiusCityList {
         return mileRadius;
     }
 
+    /**
+     * Gets the Response status type of the Zip Code API call
+     * @return the Response status type of the Zip Code API call
+     */
+    public Response.StatusType getStatusInfo() {
+        return statusInfo;
+    }
 
     /**
      * Handles the api call to find all zip codes within the given radius of the given zip code
@@ -82,10 +95,18 @@ public class RadiusCityList {
     public HashSet<String> findRadiusCities() throws IOException {
 
         String searchString = "https://www.zipcodeapi.com/rest/3itPa6fYyZJzyc0puZEjvJOwAzbpffOlwLwBmItNEepfUHQzA0zvmyPPikTBXbIi/"
-        + "radius.json/" + zipCode + "/" + mileRadius + "/mile";
+                + "radius.json/" + zipCode + "/" + mileRadius + "/mile";
 
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(searchString);
+
+        statusInfo = target.request(MediaType.APPLICATION_JSON).get().getStatusInfo();
+
+        if (statusInfo.getFamily() != Response.Status.Family.SUCCESSFUL) {
+            log.error("Zip Code API call was not successful, response reason: " + statusInfo);
+            log.error("Zip Code API url: " + searchString);
+            return null;
+        }
 
         String jsonResponse = target.request(MediaType.APPLICATION_JSON).get(String.class);
 

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,6 +45,27 @@ public class ApiTest {
             System.out.println(gameLocalDate + " is before to " + fromLocalDate);
         }
 
+        validateSportParam("NFL");
+        validateSportParam("NBA");
+        validateSportParam("AAA");
+        validateSportParam("nfl");
+        validateSportParam("NhL");
+        validateSportParam("mlb");
+
+
+
+    }
+
+    private void validateSportParam (String sport) {
+        switch (sport.toUpperCase()) {
+            case "NFL":
+            case "NHL":
+            case "NBA":
+                System.out.println(sport + " is valid");
+                break;
+            default:
+                System.out.println(sport + " is not in the list");
+        }
     }
 
     @Test

@@ -5,11 +5,10 @@ import com.citygamefinder.SportsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysportsfeeds.Fullgameschedule;
 import com.mysportsfeeds.GameentryItem;
+import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
@@ -21,6 +20,7 @@ import java.util.List;
 @Path("/sports")
 public class SportsService {
 
+    private final Logger log = Logger.getLogger(this.getClass());
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @GET
@@ -52,7 +52,14 @@ public class SportsService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{sport}")
-    public Response getMessage(@PathParam("sport") String sport)  throws Exception{
+    public Response getMessage(@PathParam("sport") String sport)  throws Exception {
+
+        if (!validateSportParam(sport)) {
+            String returnMessage = "Bad Request! Request for sport " + sport
+                    + " is not supported. Request a sport that is in the supported list";
+
+            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+        }
 
         GameSchedule schedule = new GameSchedule(sport);
         List<GameentryItem> returnGames = schedule.getSchedule();
@@ -74,6 +81,13 @@ public class SportsService {
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
         HashSet<String> zipCities = zipList.findRadiusCities();
+
+        if (zipCities == null) {
+            //do we want to evaluate zip code api response status and send different error response?
+            String returnMessage = "Error encountered with Zip Code API ... please try again later";
+
+            return errorResponse(zipList.getStatusInfo().getStatusCode(), returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+        }
 
         GameSchedule nflSchedule = new GameSchedule("NFL");
         GameSchedule nbaSchedule = new GameSchedule("NBA");
@@ -200,6 +214,33 @@ public class SportsService {
         ObjectMapper returnMapper = new ObjectMapper();
         String output = returnMapper.writerWithDefaultPrettyPrinter().writeValueAsString(returnSchedule);
         return Response.status(200).entity(output).build();
+    }
+
+
+    private boolean validateSportParam (String sport) {
+        Boolean validSport = false;
+
+        switch (sport.toUpperCase()) {
+            case "NFL":
+            case "NHL":
+            case "NBA":
+                validSport = true;
+                break;
+            default:
+                validSport = false;
+        }
+
+        return validSport;
+    }
+
+    private Response errorResponse(int status, String returnMessage, String moreInfoUrl) throws Exception {
+        JSONObject errorJSON = new JSONObject();
+
+        errorJSON.put("status", status);
+        errorJSON.put("errorMessage", returnMessage);
+        errorJSON.put("moreInfoUrl", moreInfoUrl);
+
+        return Response.status(400).entity(errorJSON.toString()).build();
     }
 }
 
