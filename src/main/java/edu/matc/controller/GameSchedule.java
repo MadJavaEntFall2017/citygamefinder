@@ -73,7 +73,7 @@ public class GameSchedule {
      * Main processing for getting the schedule for a given sport
      *
      * @return a list of GameentryItems
-     * @throws IOException
+     * @throws IOException if there is a general I/O exception
      */
     public List<GameentryItem> getSchedule() throws IOException {
 
@@ -92,7 +92,7 @@ public class GameSchedule {
      * Sets up and calls the api using the internal sport variable and returns the api GameResponse object
      *
      * @return the GameResponse from the api call
-     * @throws IOException
+     * @throws IOException if there is a general I/O exception
      */
     public GameResponse gameApiCall () throws IOException {
 

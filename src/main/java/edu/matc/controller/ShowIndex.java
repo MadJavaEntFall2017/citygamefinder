@@ -52,6 +52,12 @@ import java.util.List;
 
     }
 
+    /**
+     * Will call the api to return all available sports that can be searched
+     *
+     * @return the list of sports that can be used by the api
+     * @throws IOException if there is a general I/O exception
+     */
     private List<String> getSports() throws IOException {
 
         String json = callAPI();
@@ -67,6 +73,12 @@ import java.util.List;
         return availableSports;
     }
 
+    /**
+     * Calls the api to return the JSON response
+     *
+     * @return the JSON response from the api
+     * @throws IOException if there is a general I/O exception
+     */
     public String callAPI() throws IOException {
         URL url = new URL("http://13.59.5.68:8080/citygamefinder/sports");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

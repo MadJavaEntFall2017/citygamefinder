@@ -60,6 +60,16 @@ import java.util.Set;
 
     }
 
+    /**
+     * Builds the url needed for the api call
+     *
+     * @param sport the sport to use for the api
+     * @param zip the zip code to use for the api
+     * @param miles the miles to use for the api
+     * @param fromDate the from date to use for the api
+     * @param toDate the to date to use for the api
+     * @return the url for the api call
+     */
     public String buildUrl(String sport, String zip, String miles, String fromDate, String toDate)  {
         StringBuilder urlCall = new StringBuilder();
         urlCall.append("http://13.59.5.68:8080/citygamefinder/sports");
@@ -88,6 +98,12 @@ import java.util.Set;
 
     }
 
+    /**
+     * Sets up the list of Results from the api
+     *
+     * @param schedule the Fullgameschedule for the api
+     * @return the list of Results from the api
+     */
     public List<Result> loadResults (Fullgameschedule schedule) {
 
         List<GameentryItem> games = new ArrayList<GameentryItem>();
@@ -107,6 +123,13 @@ import java.util.Set;
         return results;
     }
 
+    /**
+     * Calls the api to get the Fullgameschedule
+     *
+     * @param url the url to use to call the api
+     * @return the Fullgameschedule returned from the api
+     * @throws IOException if there is a general I/O exception
+     */
     public Fullgameschedule callService(String url) throws IOException {
 
         URL callUrl = new URL(url);

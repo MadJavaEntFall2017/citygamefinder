@@ -90,7 +90,7 @@ public class RadiusCityList {
      * Handles the api call to find all zip codes within the given radius of the given zip code
      *
      * @return The HashSet of all zip codes within the given radius
-     * @throws IOException
+     * @throws IOException if there is a general I/O exception
      */
     public HashSet<String> findRadiusCities() throws IOException {
 
