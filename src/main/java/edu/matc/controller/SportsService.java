@@ -83,10 +83,24 @@ public class SportsService {
         HashSet<String> zipCities = zipList.findRadiusCities();
 
         if (zipCities == null) {
+            int statusCode;
             //do we want to evaluate zip code api response status and send different error response?
-            String returnMessage = "Error encountered with Zip Code API ... please try again later";
+            String returnMessage = "Error encountered with Zip Code API";
+            switch (zipList.getStatusInfo().getFamily()) {
+                case SERVER_ERROR:
+                    statusCode = 503;
+                    returnMessage = "Zip Code API is currently down; please try again later";
+                case CLIENT_ERROR:
+                    if (zipList.getStatusInfo().getStatusCode() == 400) {
+                        statusCode = zipList.getStatusInfo().getStatusCode();
+                        returnMessage = "Bad call to Zip Code API using zip code " + zipCode + " and radius " + radius;
+                    }
+                default:
+                    statusCode = 400;
+                    returnMessage = "Error encountered calling Zip Code API, returned with staus " + zipList.getStatusInfo().getStatusCode();
+            }
 
-            return errorResponse(zipList.getStatusInfo().getStatusCode(), returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(statusCode, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
         }
 
         GameSchedule nflSchedule = new GameSchedule("NFL");

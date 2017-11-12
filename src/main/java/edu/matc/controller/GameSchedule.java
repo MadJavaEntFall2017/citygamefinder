@@ -6,6 +6,7 @@ import com.mysportsfeeds.GameentryItem;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import edu.matc.entity.Stadiums;
 import edu.matc.persistence.StadiumsDao;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,13 +24,14 @@ import java.util.List;
  */
 public class GameSchedule {
 
+    private final Logger log = Logger.getLogger(this.getClass());
     private String sport;
+    private int responseCode;
 
     /**
      * Generic class constructor
      */
     public GameSchedule() {
-
     }
 
     /**
@@ -60,6 +62,14 @@ public class GameSchedule {
     }
 
     /**
+     * Gets the response code of the api call
+     * @return the response code of the api call
+     */
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    /**
      * Main processing for getting the schedule for a given sport
      *
      * @return a list of GameentryItems
@@ -73,7 +83,7 @@ public class GameSchedule {
             GameResponse response = gameApiCall();
             gameSchedule = updateZip(response);
         } catch(Exception e) {
-            e.printStackTrace();
+            log.error("Exception encountered: ", e);
         }
         return gameSchedule;
     }
@@ -93,7 +103,16 @@ public class GameSchedule {
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
         connection.setRequestProperty  ("Authorization", "Basic " + encoding);
+        responseCode = connection.getResponseCode();
+
+        if (responseCode != 200) {
+            log.error("Error encounted while calling My Sports Feed API. Response code = " + responseCode
+                    + ". Response message = " + connection.getResponseMessage());
+            return null;
+        }
+
         InputStream content = (InputStream)connection.getInputStream();
+
         BufferedReader in = new BufferedReader (new InputStreamReader(content));
         String jsonResponse="";
         String line;
@@ -141,7 +160,6 @@ public class GameSchedule {
         }
 
         return zipCode;
-
     }
 
 }
