@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This is the ShowEmployeeSearchServlet. It will set the page title and forward
- * to the employeeSearch.jsp page.
+ * This is the ShowResults servlet. It will call the API using the form date, create a list of result objects,
+ * set the page title and forward to the results.jsp page.
  *
  *@author lemerson
  */
@@ -147,6 +147,3 @@ import java.util.Set;
         return mapper.readValue(jsonResponse,Fullgameschedule.class);
     }
 }
-
-
-

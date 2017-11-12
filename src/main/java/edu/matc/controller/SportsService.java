@@ -32,9 +32,9 @@ public class SportsService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
-     * This method will call the mysportsfeeds api to return all available sports for our service
+     * This method will return the available sports for our service
      *
-     * @return the Response from the api processing
+     * @return the Response the json response that shows what sports we allow.
      * @throws Exception if there is a general exception
      */
     @GET

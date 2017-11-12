@@ -23,8 +23,8 @@ import java.util.List;
 
 
 /**
- * This is the ShowEmployeeSearchServlet. It will set the page title and forward
- * to the employeeSearch.jsp page.
+ * This is the ShowIndex Servlet. It will load a list of sports in the request, set the page title and
+ * forward to the index.jsp page.
  *
  *@author lemerson
  */
@@ -94,9 +94,3 @@ import java.util.List;
         return jsonResponse;
     }
 }
-
-
-
-
-
-
