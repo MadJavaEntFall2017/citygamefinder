@@ -346,8 +346,13 @@ public class SportsService {
         return Response.status(200).entity(output).build();
     }
 
-
-    private boolean validateSportParam (String sport) {
+    /**
+     * Validates the current sports that we allow our service to use
+     *
+     * @param sport the sport being used in our api service
+     * @return if the sport being used is the one we use, then true; else false
+     */
+    public boolean validateSportParam (String sport) {
         switch (sport.toUpperCase()) {
             case NFL:
             case NHL:
@@ -358,7 +363,16 @@ public class SportsService {
         }
     }
 
-    private Response errorResponse(int status, String returnMessage, String moreInfoUrl) throws Exception {
+    /**
+     * Handles the error response from our service
+     *
+     * @param status the status code of the response
+     * @param returnMessage the message of the response
+     * @param moreInfoUrl the url to check for more info
+     * @return the error response
+     * @throws Exception generic exception handling
+     */
+    public Response errorResponse(int status, String returnMessage, String moreInfoUrl) throws Exception {
         JSONObject errorJSON = new JSONObject();
 
         errorJSON.put("status", status);
@@ -368,8 +382,16 @@ public class SportsService {
         return Response.status(400).entity(errorJSON.toString()).build();
     }
 
-
-    private Response zipCodeApiErrorResponse(Response.StatusType statusType, String zipCode, String radius) throws Exception {
+    /**
+     * Handles errors received from calling the zip code api
+     *
+     * @param statusType the response status type
+     * @param zipCode the zip code used to call the api
+     * @param radius the radius used to call the api
+     * @return the response with the error messages from our service
+     * @throws Exception Generic exception
+     */
+    public Response zipCodeApiErrorResponse(Response.StatusType statusType, String zipCode, String radius) throws Exception {
         int statusCode;
         String returnMessage;
 
@@ -390,7 +412,14 @@ public class SportsService {
         return errorResponse(statusCode, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
     }
 
-    private Response mysportsfeedsApiErrorResponse(int responseCode) throws Exception {
+    /**
+     * Handles the error processing for the mysportfeeds api
+     *
+     * @param responseCode the response code from the api
+     * @return the response from our api
+     * @throws Exception Generic exception
+     */
+    public Response mysportsfeedsApiErrorResponse(int responseCode) throws Exception {
         int statusCode;
         String returnMessage;
 
@@ -410,7 +439,13 @@ public class SportsService {
         return errorResponse(statusCode, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
     }
 
-    private boolean validDate(String dateString) {
+    /**
+     * This checks to make sure the date passed in in a valid format
+     *
+     * @param dateString the date passed to the api
+     * @return if the date is valid, then true; else false
+     */
+    public boolean validDate(String dateString) {
         try{
             LocalDate localDate = LocalDate.parse(dateString, DATE_TIME_FORMATTER);
         } catch (Exception exception) {
