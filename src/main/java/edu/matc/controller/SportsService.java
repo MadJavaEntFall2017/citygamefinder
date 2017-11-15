@@ -93,10 +93,10 @@ public class SportsService {
             returnGames = schedule.getSchedule();
         } catch (HibernateException hibernateException) {
             log.info("hibernateException", hibernateException);
-            return errorResponse(503, "Error connecting to database for nfl", MORE_INFO_URL);
+            return errorResponse(503, "Error connecting to stadiums database", MORE_INFO_URL);
         } catch (Exception e) {
             log.info("exception", e);
-            return errorResponse(400, "Error connecting to database for nfl", MORE_INFO_URL);
+            return errorResponse(400, "Error connecting to stadiums database", MORE_INFO_URL);
         }
 
         if (schedule.getResponseCode() != 200) {
@@ -138,17 +138,17 @@ public class SportsService {
 
         List<GameentryItem> games = new ArrayList<GameentryItem>();
 
-
-        //games.addAll(nflSchedule.getSchedule());
         try {
             games.addAll(nflSchedule.getSchedule());
+            games.addAll(nbaSchedule.getSchedule());
+            games.addAll(nhlSchedule.getSchedule());
+        } catch (HibernateException hibernateException) {
+            log.info("hibernateException", hibernateException);
+            return errorResponse(503, "Error connecting to stadiums database", MORE_INFO_URL);
         } catch (Exception e) {
             log.info("exception", e);
-            return errorResponse(400, "Error connecting to database for nfl", MORE_INFO_URL);
+            return errorResponse(400, "Error connecting to stadiums database", MORE_INFO_URL);
         }
-
-        games.addAll(nbaSchedule.getSchedule());
-        games.addAll(nhlSchedule.getSchedule());
 
         log.info("nflSchedule.getResponseCode() " + nflSchedule.getResponseCode());
         log.info("nbaSchedule.getResponseCode() " + nbaSchedule.getResponseCode());
@@ -207,7 +207,17 @@ public class SportsService {
         }
 
         GameSchedule schedule = new GameSchedule(sport);
-        List<GameentryItem> games = schedule.getSchedule();
+        List<GameentryItem> games = null;
+
+        try {
+            games = schedule.getSchedule();
+        } catch (HibernateException hibernateException) {
+            log.info("hibernateException", hibernateException);
+            return errorResponse(503, "Error connecting to stadiums database", MORE_INFO_URL);
+        } catch (Exception e) {
+            log.info("exception", e);
+            return errorResponse(400, "Error connecting to stadiums database", MORE_INFO_URL);
+        }
 
         if (schedule.getResponseCode() != 200) {
             return mysportsfeedsApiErrorResponse(schedule.getResponseCode());
@@ -269,7 +279,17 @@ public class SportsService {
         }
 
         GameSchedule schedule = new GameSchedule(sport);
-        List<GameentryItem> games = schedule.getSchedule();
+        List<GameentryItem> games = null;
+
+        try {
+            games = schedule.getSchedule();
+        } catch (HibernateException hibernateException) {
+            log.info("hibernateException", hibernateException);
+            return errorResponse(503, "Error connecting to stadiums database", MORE_INFO_URL);
+        } catch (Exception e) {
+            log.info("exception", e);
+            return errorResponse(400, "Error connecting to stadiums database", MORE_INFO_URL);
+        }
 
         if (schedule.getResponseCode() != 200) {
             return mysportsfeedsApiErrorResponse(schedule.getResponseCode());
@@ -345,7 +365,17 @@ public class SportsService {
         }
 
         GameSchedule schedule = new GameSchedule(sport);
-        List<GameentryItem> games = schedule.getSchedule();
+        List<GameentryItem> games = null;
+
+        try {
+            games = schedule.getSchedule();
+        } catch (HibernateException hibernateException) {
+            log.info("hibernateException", hibernateException);
+            return errorResponse(503, "Error connecting to stadiums database", MORE_INFO_URL);
+        } catch (Exception e) {
+            log.info("exception", e);
+            return errorResponse(400, "Error connecting to stadiums database", MORE_INFO_URL);
+        }
 
         if (schedule.getResponseCode() != 200) {
             return mysportsfeedsApiErrorResponse(schedule.getResponseCode());
