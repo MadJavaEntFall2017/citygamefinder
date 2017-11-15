@@ -124,6 +124,16 @@ public class SportsService {
         GameSchedule nbaSchedule = new GameSchedule(NBA);
         GameSchedule nhlSchedule = new GameSchedule(NHL);
 
+        List<GameentryItem> games = new ArrayList<GameentryItem>();
+
+        games.addAll(nflSchedule.getSchedule());
+        games.addAll(nbaSchedule.getSchedule());
+        games.addAll(nhlSchedule.getSchedule());
+
+        log.info("nflSchedule.getResponseCode() " + nflSchedule.getResponseCode());
+        log.info("nbaSchedule.getResponseCode() " + nbaSchedule.getResponseCode());
+        log.info("nhlSchedule.getResponseCode() " + nhlSchedule.getResponseCode());
+
         //if all failed, then return error
         if (nflSchedule.getResponseCode() != 200
                 && nbaSchedule.getResponseCode() != 200
@@ -131,12 +141,6 @@ public class SportsService {
             int[] responseCodes = {nflSchedule.getResponseCode(), nbaSchedule.getResponseCode(), nhlSchedule.getResponseCode()};
             return mysportsfeedsApiErrorResponse(Arrays.stream(responseCodes).max().getAsInt());
         }
-
-        List<GameentryItem> games = new ArrayList<GameentryItem>();
-
-        games.addAll(nflSchedule.getSchedule());
-        games.addAll(nbaSchedule.getSchedule());
-        games.addAll(nhlSchedule.getSchedule());
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
         for (GameentryItem currentGame: games) {
