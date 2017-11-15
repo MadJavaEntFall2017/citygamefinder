@@ -2,8 +2,8 @@ package edu.matc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysportsfeeds.Fullgameschedule;
-import com.mysportsfeeds.GameResponse;
 import com.mysportsfeeds.GameentryItem;
+import edu.matc.entity.Error;
 import edu.matc.entity.Result;
 
 import javax.servlet.RequestDispatcher;
@@ -12,19 +12,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
- * This is the ShowEmployeeSearchServlet. It will set the page title and forward
- * to the employeeSearch.jsp page.
+ * This is the ShowResults servlet. It will call the API using the form date, create a list of result objects,
+ * set the page title and forward to the results.jsp page.
  *
  *@author lemerson
  */
@@ -32,6 +30,9 @@ import java.util.Set;
         name = "showResults",
         urlPatterns = {"/showResults"}
 ) public class ShowResults extends HttpServlet {
+
+    private Error error;
+
     /**
      * Handles HTTP GET requests.
      *
@@ -43,6 +44,7 @@ import java.util.Set;
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        error = new Error();
         String zipCode = request.getParameter("zipcode-input");
         String fromDate = request.getParameter("from-date-input");
         String toDate = request.getParameter("to-date-input");
@@ -52,14 +54,29 @@ import java.util.Set;
         String callUrl = buildUrl(sport,zipCode,miles,fromDate,toDate);
         Fullgameschedule schedule = callService(callUrl);
 
-        request.setAttribute("games", loadResults(schedule));
-        request.setAttribute("title", "Search Results");
-        String url = "/results.jsp";
+        String url = "";
+        if (error.getHasError()) {
+            url = "/error.jsp";
+            request.setAttribute("error", error);
+        } else {
+            url = "/results.jsp";
+            request.setAttribute("games", loadResults(schedule));
+            request.setAttribute("title", "Search Results");
+        }
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
         dispatcher.forward(request, response);
-
     }
 
+    /**
+     * Builds the url needed for the api call
+     *
+     * @param sport the sport to use for the api
+     * @param zip the zip code to use for the api
+     * @param miles the miles to use for the api
+     * @param fromDate the from date to use for the api
+     * @param toDate the to date to use for the api
+     * @return the url for the api call
+     */
     public String buildUrl(String sport, String zip, String miles, String fromDate, String toDate)  {
         StringBuilder urlCall = new StringBuilder();
         urlCall.append("http://13.59.5.68:8080/citygamefinder/sports");
@@ -88,6 +105,12 @@ import java.util.Set;
 
     }
 
+    /**
+     * Sets up the list of Results from the api
+     *
+     * @param schedule the Fullgameschedule for the api
+     * @return the list of Results from the api
+     */
     public List<Result> loadResults (Fullgameschedule schedule) {
 
         List<GameentryItem> games = new ArrayList<GameentryItem>();
@@ -107,23 +130,28 @@ import java.util.Set;
         return results;
     }
 
+    /**
+     * Calls the api to get the Fullgameschedule
+     *
+     * @param url the url to use to call the api
+     * @return the Fullgameschedule returned from the api
+     * @throws IOException if there is a general I/O exception
+     */
     public Fullgameschedule callService(String url) throws IOException {
 
-        URL callUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) callUrl.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setDoOutput(true);
-        InputStream content = (InputStream)connection.getInputStream();
-        BufferedReader in = new BufferedReader (new InputStreamReader(content));
-        String jsonResponse="";
-        String line;
-        while ((line = in.readLine()) != null) {
-            jsonResponse = jsonResponse + line;
+        String jsonResponse = "";
+        try {
+            Client client = ClientBuilder.newClient();
+            WebTarget target = client.target(url);
+            jsonResponse = target.request(MediaType.APPLICATION_JSON).get(String.class);
+
+        } catch (Exception e) {
+            error.setHasError(true);
+            error.setMessage(e.getMessage());
+            error.setUrl(url);
+            return null;
         }
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(jsonResponse,Fullgameschedule.class);
     }
 }
-
-
-
