@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class SportsService {
     private static final String NFL = "NFL";
     private static final String NHL = "NHL";
     private static final String NBA = "NBA";
+    private static final String MORE_INFO_URL = "https://github.com/MadJavaEntFall2017/citygamefinder";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
@@ -79,7 +81,7 @@ public class SportsService {
             String returnMessage = "Bad Request! Request for sport " + sport
                     + " is not supported. Request a sport that is in the supported list";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         GameSchedule schedule = new GameSchedule(sport);
@@ -121,19 +123,24 @@ public class SportsService {
         GameSchedule nflSchedule = new GameSchedule(NFL);
         GameSchedule nbaSchedule = new GameSchedule(NBA);
         GameSchedule nhlSchedule = new GameSchedule(NHL);
-        //GameSchedule mlbSchedule = new GameSchedule("MLB");
-
-        //todo: should we check all of the calls? if all are bad then bad, is one is good, then move forward?? Maybe only add the good ones?
-        /*if (schedule.getResponseCode() != 200) {
-            return mysportsfeedsApiErrorResponse(schedule.getResponseCode());
-        }*/
 
         List<GameentryItem> games = new ArrayList<GameentryItem>();
 
         games.addAll(nflSchedule.getSchedule());
         games.addAll(nbaSchedule.getSchedule());
         games.addAll(nhlSchedule.getSchedule());
-        //games.addAll(mlbSchedule.getSchedule());
+
+        log.info("nflSchedule.getResponseCode() " + nflSchedule.getResponseCode());
+        log.info("nbaSchedule.getResponseCode() " + nbaSchedule.getResponseCode());
+        log.info("nhlSchedule.getResponseCode() " + nhlSchedule.getResponseCode());
+
+        //if all failed, then return error
+        if (nflSchedule.getResponseCode() != 200
+                && nbaSchedule.getResponseCode() != 200
+                && nhlSchedule.getResponseCode() != 200) {
+            int[] responseCodes = {nflSchedule.getResponseCode(), nbaSchedule.getResponseCode(), nhlSchedule.getResponseCode()};
+            return mysportsfeedsApiErrorResponse(Arrays.stream(responseCodes).max().getAsInt());
+        }
 
         List<GameentryItem> returnGames = new ArrayList<GameentryItem>();
         for (GameentryItem currentGame: games) {
@@ -169,7 +176,7 @@ public class SportsService {
             String returnMessage = "Bad Request! Request for sport " + sport
                     + " is not supported. Request a sport that is in the supported list";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
@@ -224,14 +231,14 @@ public class SportsService {
             String returnMessage = "Bad Request! Request for sport " + sport
                     + " is not supported. Request a sport that is in the supported list";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         if (!validDate(fromDate)) {
             String returnMessage = "Bad Request! From Date " + fromDate
                     + " is not a valid date. Please provide a valid date in yyyy-mm-dd format";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
@@ -293,21 +300,21 @@ public class SportsService {
             String returnMessage = "Bad Request! Request for sport " + sport
                     + " is not supported. Request a sport that is in the supported list";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         if (!validDate(fromDate)) {
             String returnMessage = "Bad Request! From Date " + fromDate
                     + " is not a valid date. Please provide a valid date in yyyy-mm-dd format";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         if (!validDate(toDate)) {
             String returnMessage = "Bad Request! From Date " + toDate
                     + " is not a valid date. Please provide a valid date in yyyy-mm-dd format";
 
-            return errorResponse(400, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+            return errorResponse(400, returnMessage, MORE_INFO_URL);
         }
 
         RadiusCityList zipList = new RadiusCityList(zipCode,radius);
@@ -409,7 +416,7 @@ public class SportsService {
                 returnMessage = "Error encountered calling Zip Code API, returned with staus " + statusType.getStatusCode();
         }
 
-        return errorResponse(statusCode, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+        return errorResponse(statusCode, returnMessage, MORE_INFO_URL);
     }
 
     /**
@@ -436,7 +443,7 @@ public class SportsService {
                 returnMessage = "Error encountered calling mysportsfeeds API, returned with staus " + statusCode;
         }
 
-        return errorResponse(statusCode, returnMessage, "https://github.com/MadJavaEntFall2017/citygamefinder");
+        return errorResponse(statusCode, returnMessage, MORE_INFO_URL);
     }
 
     /**

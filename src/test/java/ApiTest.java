@@ -23,6 +23,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,6 +45,9 @@ public class ApiTest {
         if (gameLocalDate.isBefore(fromLocalDate)) {
             System.out.println(gameLocalDate + " is before to " + fromLocalDate);
         }
+
+        int[] responseCodes = {200, 500, 202};
+        System.out.println("Max = " + (Arrays.stream(responseCodes).max().getAsInt()));
 
     }
 
