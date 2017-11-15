@@ -24,12 +24,14 @@ Via these URI's: (These links work)
 * http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/2017-12-01/2017-12-25
   - "You want the NFL games within 150 miles of 53718 between the dates of 2017-12-01 & 2017-12-25"
   
-  ### A potential Implmentation of this rest service could be
-![demo](/images/demo.PNG)
 
 # live demo
 
+![demo](/images/demo.PNG)
+
 http://13.59.5.68:8080/citygamefinder/
+
+Click the link and use the form to fill out whatever fields you are looking for. The citygamefinder service is then called to return the results.
 
 
 
