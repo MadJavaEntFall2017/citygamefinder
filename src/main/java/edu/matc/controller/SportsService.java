@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -126,7 +127,16 @@ public class SportsService {
 
         List<GameentryItem> games = new ArrayList<GameentryItem>();
 
-        games.addAll(nflSchedule.getSchedule());
+        try {
+            games.addAll(nflSchedule.getSchedule());
+        } catch (IOException io) {
+
+            return errorResponse(400, "Error connecting to database for nfl", MORE_INFO_URL);
+        }
+
+
+
+        //games.addAll(nflSchedule.getSchedule());
         games.addAll(nbaSchedule.getSchedule());
         games.addAll(nhlSchedule.getSchedule());
 
