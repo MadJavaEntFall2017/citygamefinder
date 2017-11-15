@@ -1,11 +1,7 @@
 # citygamefinder
-
 Our project team loves watching sports. Home AND Away games. 
 
 If you plan on traveling anytime in the near future, you can use citygamefinder rest service to find professional sports games near you.
-
-### A potential Implmentation of this rest service could be
-![Screen1](/images/Screen1.PNG)
 
 The following sports will be searchable while their season is currently underway:
 * MLB
@@ -13,7 +9,7 @@ The following sports will be searchable while their season is currently underway
 * NFL
 * NHL
 
-Via these URI's:
+Via these URI's: (These links work)
 * http://13.59.5.68:8080/citygamefinder/sports
   - "You want to see what sports our service supports currently"
 * http://13.59.5.68:8080/citygamefinder/sports/nfl
@@ -26,3 +22,17 @@ Via these URI's:
   - "You want the NFL games within 150 miles of 53718 on or after 2017-12-01"
 * http://13.59.5.68:8080/citygamefinder/sports/nfl/53718/150/2017-12-01/2017-12-25
   - "You want the NFL games within 150 miles of 53718 between the dates of 2017-12-01 & 2017-12-25"
+  
+
+# live demo
+
+![demo](images/demo.PNG)
+
+http://13.59.5.68:8080/citygamefinder/
+
+
+Click the link and use the form to fill out whatever fields you are looking for. The citygamefinder service is then called to return the results.
+
+
+
+
