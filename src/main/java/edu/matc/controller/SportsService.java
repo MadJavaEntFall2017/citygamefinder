@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysportsfeeds.Fullgameschedule;
 import com.mysportsfeeds.GameentryItem;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -86,7 +87,17 @@ public class SportsService {
         }
 
         GameSchedule schedule = new GameSchedule(sport);
-        List<GameentryItem> returnGames = schedule.getSchedule();
+        List<GameentryItem> returnGames = null;
+
+        try {
+            returnGames = schedule.getSchedule();
+        } catch (HibernateException hibernateException) {
+            log.info("hibernateException", hibernateException);
+            return errorResponse(503, "Error connecting to database for nfl", MORE_INFO_URL);
+        } catch (Exception e) {
+            log.info("exception", e);
+            return errorResponse(400, "Error connecting to database for nfl", MORE_INFO_URL);
+        }
 
         if (schedule.getResponseCode() != 200) {
             return mysportsfeedsApiErrorResponse(schedule.getResponseCode());
@@ -127,16 +138,15 @@ public class SportsService {
 
         List<GameentryItem> games = new ArrayList<GameentryItem>();
 
+
+        //games.addAll(nflSchedule.getSchedule());
         try {
             games.addAll(nflSchedule.getSchedule());
-        } catch (IOException io) {
-
+        } catch (Exception e) {
+            log.info("exception", e);
             return errorResponse(400, "Error connecting to database for nfl", MORE_INFO_URL);
         }
 
-
-
-        //games.addAll(nflSchedule.getSchedule());
         games.addAll(nbaSchedule.getSchedule());
         games.addAll(nhlSchedule.getSchedule());
 
