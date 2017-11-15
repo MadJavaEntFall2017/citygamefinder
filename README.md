@@ -26,8 +26,9 @@ Via these URI's: (These links work)
 
 # live demo
 
-![demo](http://13.59.5.68:8080/citygamefinder/)
+![demo](images/demo.PNG)
 
+http://13.59.5.68:8080/citygamefinder/
 
 
 Click the link and use the form to fill out whatever fields you are looking for. The citygamefinder service is then called to return the results.
