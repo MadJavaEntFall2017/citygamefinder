@@ -1,5 +1,4 @@
 # citygamefinder
-
 Our project team loves watching sports. Home AND Away games. 
 
 If you plan on traveling anytime in the near future, you can use citygamefinder rest service to find professional sports games near you.
@@ -27,9 +26,9 @@ Via these URI's: (These links work)
 
 # live demo
 
-![demo](/images/demo.PNG)
+![demo](http://13.59.5.68:8080/citygamefinder/)
 
-http://13.59.5.68:8080/citygamefinder/
+
 
 Click the link and use the form to fill out whatever fields you are looking for. The citygamefinder service is then called to return the results.
 
