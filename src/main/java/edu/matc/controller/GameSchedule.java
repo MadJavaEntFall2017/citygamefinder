@@ -7,6 +7,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import edu.matc.entity.Stadiums;
 import edu.matc.persistence.StadiumsDao;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -75,13 +76,16 @@ public class GameSchedule {
      * @return a list of GameentryItems
      * @throws IOException if there is a general I/O exception
      */
-    public List<GameentryItem> getSchedule() throws IOException {
+    public List<GameentryItem> getSchedule() throws IOException, HibernateException {
 
         List<GameentryItem> gameSchedule = new ArrayList<GameentryItem>();
 
         try {
             GameResponse response = gameApiCall();
             gameSchedule = updateZip(response);
+        } catch(HibernateException hibernateException) {
+            log.error("Hibernate exception encountered: ", hibernateException);
+            throw hibernateException;
         } catch(Exception e) {
             log.error("Exception encountered: ", e);
         }
@@ -129,7 +133,7 @@ public class GameSchedule {
      * @param response The GameResponse item from the api
      * @return The GameentryItem from the api but with updated zip codes
      */
-    public List<GameentryItem> updateZip (GameResponse response)  {
+    public List<GameentryItem> updateZip (GameResponse response) throws HibernateException {
 
         StadiumsDao dao = new StadiumsDao();
         List<Stadiums> stadiums = dao.getAllStadiums();
