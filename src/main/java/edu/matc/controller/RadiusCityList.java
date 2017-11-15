@@ -3,6 +3,10 @@ package edu.matc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zipcodeapi.ZipCodesItem;
 import com.zipcodeapi.ZipResponse;
+import org.apache.log4j.Logger;
+
+import javax.servlet.RequestDispatcher;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -18,8 +22,11 @@ import java.util.List;
  */
 public class RadiusCityList {
 
+    private final Logger log = Logger.getLogger(this.getClass());
+
     private String zipCode;
     private String mileRadius;
+    private String errorMsg;
 
     /**
      * Generic class constructor
@@ -74,6 +81,21 @@ public class RadiusCityList {
 
 
     /**
+     * Gets the error message resulting from exception thrown by zipcode api call
+     * @return the error message
+     */
+    public String getErrorMsg() { return errorMsg; }
+
+
+    /**
+     * Sets the error message variable
+     *
+     * @param errorMsg the error message
+     */
+    public void setErrorMsg(String errorMsg) { this.errorMsg = errorMsg; }
+
+
+    /**
      * Handles the api call to find all zip codes within the given radius of the given zip code
      *
      * @return The HashSet of all zip codes within the given radius
@@ -84,10 +106,25 @@ public class RadiusCityList {
         String searchString = "https://www.zipcodeapi.com/rest/3itPa6fYyZJzyc0puZEjvJOwAzbpffOlwLwBmItNEepfUHQzA0zvmyPPikTBXbIi/"
         + "radius.json/" + zipCode + "/" + mileRadius + "/mile";
 
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(searchString);
+        String jsonResponse;
 
-        String jsonResponse = target.request(MediaType.APPLICATION_JSON).get(String.class);
+        try {
+            Client client = ClientBuilder.newClient();
+            WebTarget target = client.target(searchString);
+
+            jsonResponse = target.request(MediaType.APPLICATION_JSON).get(String.class);
+
+        } catch (NotFoundException nfe) {
+            log.error("Zip code " + getZipCode() + " does not exist");
+            setZipCode("Zipcode does not exist");
+            return null;
+
+        } catch (Exception e) {
+            log.error("Bad or invalid Zipcode " + getZipCode());
+            setZipCode("Bad or invalid Zipcode");
+            return null;
+        }
+
 
         ObjectMapper mapper = new ObjectMapper();
         ZipResponse zipResponse = mapper.readValue(jsonResponse,ZipResponse.class);
