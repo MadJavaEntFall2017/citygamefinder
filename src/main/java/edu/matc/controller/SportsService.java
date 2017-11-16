@@ -403,7 +403,7 @@ public class SportsService {
         errorJSON.put("errorMessage", returnMessage);
         errorJSON.put("moreInfoUrl", moreInfoUrl);
 
-        return Response.status(400).entity(errorJSON.toString()).build();
+        return Response.status(status).entity(errorJSON.toString()).build();
     }
 
     /**
